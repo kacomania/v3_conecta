@@ -1,0 +1,9 @@
+- `[x]` Executar queries no Supabase para Backfill e Criação do Trigger de departamento automático.
+- `[x]` Criar Server Action `updateDepartment` em `actions/chamados.ts`.
+- `[x]` Criar formulário client-side `department-form.tsx` (com justificativa obrigatória).
+- `[x]` Atualizar `page.tsx` do chamado para injetar os departamentos e o formulário.
+- `[x]` Verificar funcionamento do fluxo.
+- `[x]` (Sprint 27 Plus) Atualizar o arquivo `01_schema.sql` com as novas colunas em `departments` e `categories` e RLS correspondente.
+- `[x]` (Sprint 27 Plus) Restaurar o filtro de `prefeitura_id` no dropdown de reatribuição no `page.tsx` (Gestão Conecta).
+- `[x]` (Sprint 27 Plus) Criar arquivo de migração/limpeza (`backend_database/04_limpeza_e_multi_tenant.sql`) contendo as queries de TRUNCATE e ALTER TABLE.
+- `[x]` (Sprint 27 Plus) Atualizar a documentação consolidando as entregas.

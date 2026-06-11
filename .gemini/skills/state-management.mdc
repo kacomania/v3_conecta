@@ -1,0 +1,6 @@
+---
+description: Regras rigorosas de Gerenciamento de Estado para o projeto
+alwaysApply: true
+globs: ["lib/**/*.dart"]
+---
+Regras: NUNCA use GetX, Provider ou BLoC. NUNCA use setState para regras de negócio. Use SEMPRE Notifier<T> (síncrono) ou AsyncNotifier<T> (assíncrono/Supabase). O estado deve ser imutável (copyWith).

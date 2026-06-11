@@ -1,0 +1,5 @@
+- `[x]` Task 1: Ocultar contas `USER` (nível 0) na query de `/dashboard/usuarios/page.tsx`
+- `[x]` Task 2: Bloquear modificação de contas de nível 0 no backend em `actions/admin.ts`
+- `[x]` Task 3: Atualizar RLS de `system_audit_logs` no banco de dados para permitir leitura para `access_level >= 3` (Auditor)
+- `[x]` Task 4: Criar tela `/dashboard/auditoria/page.tsx` para exibição da tabela de auditoria
+- `[x]` Task 5: Adicionar link "Auditoria" no menu lateral em `layout.tsx` (restrito a nível >= 3)

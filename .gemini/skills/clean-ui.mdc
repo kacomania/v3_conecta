@@ -1,0 +1,6 @@
+---
+description: Padrões do Design System e UI do App
+alwaysApply: true
+globs: ["lib/ui/**/*.dart"]
+---
+Regras: NUNCA declare cores com Colors.blue ou hexadecimais soltos. Use OBRIGATORIAMENTE o TenantTheme. Importe botões e inputs estritamente de lib/ui/core/components/. A navegação deve usar exclusivamente context.go ou context.push do go_router.

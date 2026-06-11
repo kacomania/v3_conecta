@@ -1,0 +1,6 @@
+---
+description: Regras de acesso a dados e RLS do Supabase
+alwaysApply: true
+globs: ["lib/data/**/*.dart", "lib/domain/**/*.dart"]
+---
+Regras: NUNCA faça chamadas ao Supabase direto na UI. Em funções de criação (ex: signUp, createRequest), SEMPRE passe o prefeitura_id para garantir o RLS. Retorne sempre modelos do Domain com .fromJson().

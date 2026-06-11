@@ -1,0 +1,11 @@
+---
+description: Regras de Versionamento e Git
+alwaysApply: true
+globs: ["*"]
+---
+# Regras de Git e Commits
+- NUNCA faça commits diretos na branch `main` ou `master`.
+- Sempre verifique em qual branch você está (`git branch`) antes de codificar.
+- Se estiver no início de uma Sprint, você DEVE criar uma branch `feature/sprint-[numero]-[nome]`.
+- Ao fazer commit, você DEVE usar Conventional Commits em Português (pt-BR). Exemplo: `feat: cria tela de login` ou `fix: ajusta margem do botão`.
+- Os commits devem ser atômicos (faça commit a cada tarefa concluída, não deixe tudo para o final).

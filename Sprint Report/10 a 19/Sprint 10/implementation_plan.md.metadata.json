@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Updated implementation plan for refactoring the occurrences triage table using a Client-Side architecture for sorting and expanding rows, optimizing performance for scoped data access.",
+  "updatedAt": "2026-06-02T17:04:55.388730300Z",
+  "requestFeedback": true
+}
