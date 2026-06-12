@@ -12,7 +12,18 @@ class AuthController extends AsyncNotifier<void> {
     state = const AsyncValue.loading();
     try {
       final repository = ref.read(authRepositoryProvider);
-      await repository.signIn(email: email, password: password);
+      await repository.signIn(email: email.trim(), password: password);
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      await repository.signInWithGoogle();
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -23,15 +34,17 @@ class AuthController extends AsyncNotifier<void> {
     required String email,
     required String password,
     required String name,
+    required String cpf,
     required String prefeituraId,
   }) async {
     state = const AsyncValue.loading();
     try {
       final repository = ref.read(authRepositoryProvider);
       await repository.signUp(
-        email: email,
+        email: email.trim(),
         password: password,
-        name: name,
+        name: name.trim(),
+        cpf: cpf.trim(),
         prefeituraId: prefeituraId,
       );
       state = const AsyncValue.data(null);

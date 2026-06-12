@@ -18,6 +18,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -31,7 +32,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final password = _passwordController.text;
     if (email.isNotEmpty && password.isNotEmpty) {
       ref.read(authControllerProvider.notifier).signIn(email, password);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preencha e-mail e senha.')),
+      );
     }
+  }
+
+  void _signInWithGoogle() {
+    ref.read(authControllerProvider.notifier).signInWithGoogle();
   }
 
   @override
@@ -94,13 +103,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 label: 'Senha',
                 hintText: 'Digite sua senha',
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: _obscurePassword,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
               ),
               const SizedBox(height: 24),
               PrimaryButton(
                 label: 'Entrar',
                 isLoading: isLoading,
                 onPressed: _submit,
+              ),
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                onPressed: isLoading ? null : _signInWithGoogle,
+                icon: const Icon(Icons.login),
+                label: const Text('Entrar com Google'),
               ),
               const SizedBox(height: 16),
               TextButton(

@@ -5,10 +5,12 @@ abstract class AuthRepository {
   AppUser? get currentUser;
 
   Future<AppUser> signIn({required String email, required String password});
+  Future<AppUser> signInWithGoogle();
   Future<AppUser> signUp({
     required String email,
     required String password,
     required String name,
+    required String cpf,
     required String prefeituraId,
   });
   Future<void> signOut();

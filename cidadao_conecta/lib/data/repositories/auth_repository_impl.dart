@@ -40,16 +40,26 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<AppUser> signInWithGoogle() async {
+    final response = await _authService.signInWithGoogle();
+    final user = response.user;
+    if (user == null) throw Exception('Falha ao fazer login com Google');
+    return await _mapUser(user);
+  }
+
+  @override
   Future<AppUser> signUp({
     required String email,
     required String password,
     required String name,
+    required String cpf,
     required String prefeituraId,
   }) async {
     final response = await _authService.signUp(
       email: email,
       password: password,
       name: name,
+      cpf: cpf,
       prefeituraId: prefeituraId,
     );
     final user = response.user;

@@ -4,3 +4,7 @@
 .env.development
 .env.production
 .env.*
+gestao_conecta/create_users.mjs
+gestao_conecta/historico_comandos.sql
+docs/
+Sprint Report/

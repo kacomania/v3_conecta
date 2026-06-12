@@ -64,7 +64,7 @@ export default function DevelopersClient({ initialWebhooks, initialApiKeys }: { 
 
       {/* Card de Documentação da API */}
       <Link
-        href="/dashboard/desenvolvedores/docs"
+        href="/desenvolvedores/docs"
         className="block bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg p-6 shadow-md border border-gray-700 hover:border-blue-500 transition-all group"
       >
         <div className="flex items-center justify-between">

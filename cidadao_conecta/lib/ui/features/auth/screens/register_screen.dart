@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/components/custom_text_field.dart';
 import '../../../core/components/primary_button.dart';
+import '../../../../core/utils/validators.dart';
 import '../auth_controller.dart';
 import '../../../../core/di/providers.dart';
 import 'widgets/prefeitura_dropdown.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -16,14 +18,24 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _nameController = TextEditingController();
+  final _cpfController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  
+  final _cpfMaskFormatter = MaskTextInputFormatter(
+    mask: '###.###.###-##',
+    filter: {"#": RegExp(r'[0-9]')},
+  );
+
   bool _acceptedTerms = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
     _nameController.dispose();
+    _cpfController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -32,15 +44,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   void _submit() {
     final name = _nameController.text;
+    final cpf = _cpfController.text;
     final email = _emailController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
     
     final currentTenant = ref.read(currentTenantProvider).value;
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+    if (name.isEmpty || email.isEmpty || password.isEmpty || cpf.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Preencha todos os campos.')),
+      );
+      return;
+    }
+
+    final cpfError = Validators.validateCPF(cpf);
+    if (cpfError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(cpfError)),
       );
       return;
     }
@@ -68,6 +89,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     ref.read(authControllerProvider.notifier).signUp(
       name: name,
+      cpf: cpf,
       email: email,
       password: password,
       prefeituraId: currentTenant.id,
@@ -125,23 +147,52 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
               const SizedBox(height: 16),
               CustomTextField(
+                label: 'CPF',
+                hintText: 'Digite seu CPF',
+                controller: _cpfController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [_cpfMaskFormatter],
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
                 label: 'E-mail',
                 hintText: 'Digite seu e-mail',
                 controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 label: 'Senha',
                 hintText: 'Crie uma senha',
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: _obscurePassword,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 label: 'Confirmar Senha',
                 hintText: 'Repita a senha',
                 controller: _confirmPasswordController,
-                obscureText: true,
+                obscureText: _obscureConfirmPassword,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
+                ),
               ),
               const SizedBox(height: 16),
               CheckboxListTile(

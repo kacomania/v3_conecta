@@ -34,8 +34,9 @@ export async function middleware(request: NextRequest) {
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login')
   const isTransparenciaRoute = request.nextUrl.pathname.startsWith('/transparencia')
   const isApiRoute = request.nextUrl.pathname.startsWith('/api/')
+  const isDocsRoute = request.nextUrl.pathname.startsWith('/desenvolvedores/docs')
 
-  if (!user && !isAuthRoute && !isTransparenciaRoute && !isApiRoute && request.nextUrl.pathname !== '/') {
+  if (!user && !isAuthRoute && !isTransparenciaRoute && !isApiRoute && !isDocsRoute && request.nextUrl.pathname !== '/') {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
