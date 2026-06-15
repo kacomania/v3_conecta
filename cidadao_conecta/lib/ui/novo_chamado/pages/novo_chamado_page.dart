@@ -8,7 +8,7 @@ import '../../../core/di/providers.dart';
 import '../../../domain/entities/draft_solicitacao.dart';
 import '../../../domain/entities/categoria_entity.dart';
 import '../viewmodels/novo_chamado_view_model.dart';
-import '../controllers/categories_controller.dart';
+import '../../home/viewmodels/home_view_model.dart';
 
 class NovoChamadoPage extends ConsumerStatefulWidget {
   const NovoChamadoPage({super.key});
@@ -26,7 +26,9 @@ class _NovoChamadoPageState extends ConsumerState<NovoChamadoPage> {
     final draft = draftState.value ?? DraftSolicitacao();
     final isLoading = draftState.isLoading;
     final viewModel = ref.read(novoChamadoViewModelProvider.notifier);
-    final categoriesState = ref.watch(categoriesControllerProvider);
+    
+    final homeStateAsync = ref.watch(homeViewModelProvider);
+    final categoriesState = homeStateAsync.whenData((state) => state.categorias);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),

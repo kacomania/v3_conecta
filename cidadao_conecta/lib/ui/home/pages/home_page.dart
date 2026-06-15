@@ -8,6 +8,7 @@ import '../widgets/action_card.dart';
 import '../widgets/category_grid.dart';
 import '../../../core/di/providers.dart';
 import '../../core/themes/app_colors.dart';
+import '../../novo_chamado/viewmodels/novo_chamado_view_model.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -94,7 +95,25 @@ class HomePage extends ConsumerWidget {
             icon: const Icon(Icons.logout, color: Colors.red, size: 28),
             tooltip: 'Sair',
             onPressed: () async {
-              await ref.read(authRepositoryProvider).signOut();
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Sair da conta?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(false),
+                      child: const Text('Cancelar'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(true),
+                      child: const Text('Sair'),
+                    ),
+                  ],
+                ),
+              );
+              if (confirmed == true) {
+                await ref.read(authRepositoryProvider).signOut();
+              }
             },
           ),
           const SizedBox(width: 8),
@@ -153,14 +172,6 @@ class HomePage extends ConsumerWidget {
                           context.pushNamed('avisos');
                         },
                       ),
-                      const SizedBox(height: 12),
-                      ActionCard(
-                        icon: Icons.person_outline,
-                        title: 'Meu Perfil',
-                        onTap: () {
-                          context.pushNamed('meuPerfil');
-                        },
-                      ),
                       const SizedBox(height: 32),
                       const Text(
                         'Serviços por Categoria',
@@ -171,9 +182,10 @@ class HomePage extends ConsumerWidget {
                       ),
                       const SizedBox(height: 16),
                       CategoryGrid(
-                        categorias: state.categorias,
+                        categorias: state.categorias.take(4).toList(),
                         onCategoryTap: (categoria) {
-                          // Implementar: Navigate to category details
+                          ref.read(novoChamadoViewModelProvider.notifier).updateCategoria(categoria.id);
+                          context.pushNamed('novoChamado');
                         },
                       ),
                       const SizedBox(height: 32),

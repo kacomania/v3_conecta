@@ -53,7 +53,7 @@ export async function deleteDepartment(formData: FormData) {
 
 // ─── Categorias ─────────────────────────────────────────────────────────────
 
-export async function createCategory(formData: FormData) {
+export async function createCategory(prevState: any, formData: FormData) {
   const supabase = await createClient()
   const name = formData.get('name') as string
   const department_id = formData.get('department_id') as string
@@ -61,11 +61,11 @@ export async function createCategory(formData: FormData) {
   const sla_hours = sla_hours_raw ? parseInt(sla_hours_raw as string, 10) : 72
   
   if (!name?.trim() || !department_id) {
-    throw new Error('Nome da categoria e departamento são obrigatórios')
+    return { error: 'Nome da categoria e departamento são obrigatórios' }
   }
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Não autenticado')
+  if (!user) return { error: 'Não autenticado' }
 
   const { data: userRole } = await supabase
     .from('user_roles')
@@ -74,7 +74,7 @@ export async function createCategory(formData: FormData) {
     .single()
 
   const prefeitura_id = userRole?.prefeitura_id
-  if (!prefeitura_id) throw new Error('Prefeitura não associada')
+  if (!prefeitura_id) return { error: 'Prefeitura não associada' }
 
   const { error } = await supabase.from('categories').insert({ 
     name: name.trim(),
@@ -85,9 +85,9 @@ export async function createCategory(formData: FormData) {
 
   if (error) {
     if (error.code === '23505' || error.message.includes('unique constraint')) {
-      throw new Error('Uma categoria com este nome já existe nesta prefeitura.')
+      return { error: 'Uma categoria com este nome já existe nesta secretaria.' }
     }
-    throw new Error(error.message)
+    return { error: error.message }
   }
   
   if (user?.id) {
@@ -99,6 +99,7 @@ export async function createCategory(formData: FormData) {
   }
   
   revalidatePath('/dashboard', 'layout')
+  return { error: null }
 }
 
 export async function deleteCategory(formData: FormData) {

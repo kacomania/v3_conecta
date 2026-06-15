@@ -40,6 +40,15 @@ void main() {
       expect(state.descricao, 'New Desc');
     });
 
+    test('updateCategoria updates the category id', () async {
+      await container.read(novoChamadoViewModelProvider.future);
+      
+      container.read(novoChamadoViewModelProvider.notifier).updateCategoria('cat_123');
+      final state = container.read(novoChamadoViewModelProvider).value!;
+      
+      expect(state.idCategoria, 'cat_123');
+    });
+
     test('addFoto adds a photo up to limit of 3', () async {
       await container.read(novoChamadoViewModelProvider.future);
       final notifier = container.read(novoChamadoViewModelProvider.notifier);

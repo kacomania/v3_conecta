@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
-import { createCategory, deleteCategory } from '@/actions/admin'
+import { deleteCategory } from '@/actions/admin'
 import { Fragment } from 'react'
+import CreateCategoryForm from './CreateCategoryForm'
 
 export default async function CategoriasPage() {
   const supabase = await createClient()
@@ -35,41 +36,7 @@ export default async function CategoriasPage() {
 
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
         <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Nova Categoria</h2>
-        <form action={createCategory} className="flex gap-4 items-center flex-wrap">
-          <input 
-            type="text" 
-            name="name" 
-            placeholder="Nome da categoria" 
-            className="flex-1 px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required 
-          />
-          <select 
-            name="department_id" 
-            className="flex-1 px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-            defaultValue=""
-          >
-            <option value="" disabled>Selecione um departamento</option>
-            {departments?.map(dept => (
-              <option key={dept.id} value={dept.id}>{dept.name}</option>
-            ))}
-          </select>
-          <input 
-            type="number" 
-            name="sla_hours" 
-            placeholder="SLA (horas)" 
-            defaultValue="72"
-            min="1"
-            className="w-32 px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required 
-          />
-          <button 
-            type="submit" 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors shadow-sm"
-          >
-            Adicionar
-          </button>
-        </form>
+        <CreateCategoryForm departments={departments} />
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
