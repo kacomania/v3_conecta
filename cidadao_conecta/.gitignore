@@ -46,3 +46,8 @@ app.*.map.json
 
 # Environment secrets
 .env
+.env.*
+*.env
+
+# Firebase Config (Secrets)
+lib/firebase_options.dart
