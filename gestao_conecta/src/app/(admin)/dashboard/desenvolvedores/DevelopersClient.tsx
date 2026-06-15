@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { saveWebhook, generateApiKey, deleteApiKey } from '@/actions/developers'
+import { PageHeader } from '@/components/page-header'
 
 export default function DevelopersClient({ initialWebhooks, initialApiKeys }: { initialWebhooks: any[], initialApiKeys: any[] }) {
   const [webhookUrl, setWebhookUrl] = useState(initialWebhooks[0]?.url || '')
@@ -57,10 +58,10 @@ export default function DevelopersClient({ initialWebhooks, initialApiKeys }: { 
 
   return (
     <div className="space-y-8 max-w-4xl">
-      <div>
-        <h2 className="text-2xl font-mono font-bold text-gray-900 tracking-tight">Portal do Desenvolvedor</h2>
-        <p className="text-gray-500 mt-1 font-mono text-sm">Gerencie Webhooks e Chaves de API para integrações externas.</p>
-      </div>
+      <PageHeader 
+        title="Portal do Desenvolvedor" 
+        description="Gerencie Webhooks e Chaves de API para integrações externas." 
+      />
 
       {/* Card de Documentação da API */}
       <Link

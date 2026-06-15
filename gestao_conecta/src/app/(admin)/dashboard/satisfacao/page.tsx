@@ -2,6 +2,7 @@ import { getCsatMetrics, getLatestFeedbacks } from '@/actions/csat'
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import SentimentDonut from './SentimentDonut'
+import { PageHeader } from '@/components/page-header'
 
 export default async function SatisfacaoPage() {
   const supabase = await createClient()
@@ -28,9 +29,9 @@ export default async function SatisfacaoPage() {
 
   return (
     <div className="space-y-8 font-inter text-[#1b1c1c]">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold text-[#00254d]">Satisfação (CSAT)</h1>
-        <p className="text-sm text-[#434750]">Acompanhe as avaliações dos cidadãos sobre os atendimentos.</p>
+      <div className="mb-8">
+        <PageHeader title="Satisfação (CSAT)" />
+        <p className="text-[#434750] mt-1">Visão geral das avaliações e feedback dos cidadãos.</p>
       </div>
 
       {/* KPI Cards */}

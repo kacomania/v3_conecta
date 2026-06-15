@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { deleteDepartment } from '@/actions/admin'
 import CreateDepartmentForm from './CreateDepartmentForm'
+import { PageHeader } from '@/components/page-header'
 
 export default async function DepartamentosPage() {
   const supabase = await createClient()
@@ -8,9 +9,7 @@ export default async function DepartamentosPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gerenciar Departamentos</h1>
-      </div>
+      <PageHeader title="Gerenciar Departamentos" />
 
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
         <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Novo Departamento</h2>

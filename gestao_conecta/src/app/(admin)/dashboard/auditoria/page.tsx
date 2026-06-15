@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { getAuditLogs } from '@/actions/audit'
 import { getPrefeituras } from '@/actions/filters'
 import AuditClient from './AuditClient'
+import { PageHeader } from '@/components/page-header'
 
 export const dynamic = 'force-dynamic'
 
@@ -72,12 +73,10 @@ export default async function AuditoriaPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="font-inter text-2xl font-bold text-[#00254d]">Corregedoria e Auditoria</h1>
-        <p className="text-sm text-[#434750]">
-          Rastreabilidade total das ações no sistema.
-        </p>
-      </div>
+      <PageHeader 
+        title="Corregedoria e Auditoria" 
+        description="Rastreabilidade total das ações no sistema." 
+      />
 
       <AuditClient 
         initialData={data} 

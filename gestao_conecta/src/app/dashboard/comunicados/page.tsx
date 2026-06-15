@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { createAnnouncement } from '@/actions/comunicados'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { PageHeader } from '@/components/page-header'
 
 export const metadata = {
   title: 'Comunicados | Gestão Conecta',
@@ -45,7 +46,7 @@ export default async function ComunicadosPage() {
           ← Voltar para o Dashboard
         </Link>
       </div>
-      <h1 className="text-3xl font-bold mb-8">Comunicados Oficiais (Broadcast)</h1>
+      <PageHeader title="Comunicados Oficiais (Broadcast)" />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Formulário */}

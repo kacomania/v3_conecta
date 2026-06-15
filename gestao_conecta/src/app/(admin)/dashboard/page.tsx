@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
 import { DashboardFilters } from '@/components/dashboard-filters'
 import { DashboardTable } from '@/components/dashboard-table'
+import { PageHeader } from '@/components/page-header'
 
 export const dynamic = 'force-dynamic'
 
@@ -98,7 +99,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   return (
     <div className="flex flex-col gap-6 font-inter">
-      <h2 className="text-2xl font-bold text-[#1b1c1c]">Triagem de Chamados</h2>
+      <PageHeader title="Triagem de Chamados" />
       
       <DashboardFilters />
 

@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import { getDashboardMetrics } from '@/actions/analytics';
 import { AnalyticsCharts, KpiCards } from '@/components/analytics-charts';
 import { redirect } from 'next/navigation';
+import { PageHeader } from '@/components/page-header';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,7 +47,7 @@ export default async function EstatisticasPage() {
 
   return (
     <div className="flex flex-col gap-6 font-inter pb-10">
-      <h2 className="text-2xl font-bold text-[#1b1c1c]">Estatísticas e Relatórios</h2>
+      <PageHeader title="Estatísticas e Relatórios" />
       
       <KpiCards statusData={metrics.statusDistribution} />
       <AnalyticsCharts 

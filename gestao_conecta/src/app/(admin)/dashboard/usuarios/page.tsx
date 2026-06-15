@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { UserRoleForm } from './user-role-form'
+import { PageHeader } from '@/components/page-header'
 
 export default async function UsuariosPage() {
   const supabase = await createClient()
@@ -41,8 +42,8 @@ export default async function UsuariosPage() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestão de Usuários</h1>
+      <div className="flex items-center justify-between mb-8">
+        <PageHeader title="Gestão de Usuários" />
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">

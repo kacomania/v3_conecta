@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { getPrefeituras } from '@/actions/configuracoes';
 import { ConfigManager } from '@/components/config-forms';
+import { PageHeader } from '@/components/page-header';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,10 +43,10 @@ export default async function ConfiguracoesPage() {
 
   return (
     <div className="flex flex-col gap-6 font-inter pb-10">
-      <div>
-        <h2 className="text-2xl font-bold text-[#1b1c1c]">Configurações do Sistema</h2>
-        <p className="text-[#3f4948] mt-1">Gerenciamento global de Prefeituras e Secretarias.</p>
-      </div>
+      <PageHeader 
+        title="Configurações do Sistema" 
+        description="Gerenciamento global de Prefeituras e Secretarias." 
+      />
       
       <ConfigManager 
         initialPrefeituras={prefeituras} 
