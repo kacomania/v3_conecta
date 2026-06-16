@@ -46,8 +46,15 @@ export type TimelineEntry = {
 // ─── Queries ─────────────────────────────────────────────────────────────────
 
 /**
- * Busca os detalhes completos de um chamado e sua linha do tempo.
- * Executa server-side para garantir que o RLS do servidor logado seja respeitado.
+ * Busca os detalhes completos de um chamado e sua linha do tempo associada.
+ * 
+ * Esta Server Action roda nativamente no servidor (Node.js runtime). Ao invocar `createClient()`,
+ * ela lê os cookies de sessão do usuário atual para instanciar o cliente Supabase (SSR).
+ * Esse fluxo garante que as políticas de RLS (Row Level Security) definidas no banco sejam rigorosamente
+ * respeitadas, impedindo vazamento de dados entre prefeituras.
+ * 
+ * @param {string} id - O UUID da ocorrência a ser buscada.
+ * @returns {Promise<Object>} Um objeto contendo a ocorrência detalhada, a linha do tempo e eventuais erros.
  */
 export async function getChamadoDetails(id: string): Promise<{
   occurrence: OccurrenceDetail | null
@@ -82,8 +89,13 @@ export async function getChamadoDetails(id: string): Promise<{
 // ─── Mutations ────────────────────────────────────────────────────────────────
 
 /**
- * Ação 1: Atualiza o status de um chamado na tabela `occurrences`.
- * Também insere um registro na `occurrence_timeline` para auditar a mudança.
+ * Atualiza o status de um chamado seguindo o fluxo de auditoria imutável.
+ * 
+ * Esta Server Action lê os cookies para proteger a mutação via RLS. Além de atualizar a tabela `occurrences`,
+ * ela insere de forma atômica um registro na `occurrence_timeline` (que atua como um log imutável de status).
+ * Essa abordagem assegura a rastreabilidade completa para o cidadão e para o gestor.
+ * 
+ * @param {FormData} formData - Contém `occurrenceId`, `oldStatus` e `newStatus`.
  */
 export async function updateStatus(formData: FormData) {
   const supabase = await createClient()
@@ -125,8 +137,13 @@ export async function updateStatus(formData: FormData) {
 }
 
 /**
- * Ação 2: Insere uma nova nota na `occurrence_timeline`.
- * O campo `is_public` define a visibilidade para o cidadão no app Flutter.
+ * Insere uma nova nota ou evidência na linha do tempo de um chamado.
+ * 
+ * Executa no servidor validando a sessão (cookies). O campo `is_public` é a regra de negócio central aqui:
+ * ele controla se a anotação ficará visível para o cidadão no app Flutter (Transparência) ou se será
+ * restrita apenas à equipe interna de gestão.
+ * 
+ * @param {FormData} formData - Contém `occurrenceId`, `description`, `isPublic` (on/off) e `evidence` (File).
  */
 export async function addTimelineNote(formData: FormData) {
   const supabase = await createClient()
@@ -197,7 +214,14 @@ export async function addTimelineNote(formData: FormData) {
 }
 
 /**
- * Ação 3: Assume o atendimento de um chamado (Pessimistic Locking).
+ * Assume a exclusividade no atendimento de um chamado (Pessimistic Locking).
+ * 
+ * Roda como Server Action com RLS habilitado. Esta função implementa a regra de negócio do Timeout de 30 minutos:
+ * Um gestor só pode "travar" o chamado para si se ele não estiver sendo atendido, ou se o lock atual 
+ * for mais antigo que 30 minutos (evitando que chamados fiquem presos por inatividade). Se expirar, 
+ * o lock anterior é derrubado e um log de inatividade é gerado na auditoria.
+ * 
+ * @param {string} id - O UUID do chamado a ser travado (locked) para o usuário atual.
  */
 export async function lockTicket(id: string) {
   const supabase = await createClient()
@@ -270,7 +294,13 @@ export async function lockTicket(id: string) {
 }
 
 /**
- * Ação 4: Pausa/Encerra o atendimento de um chamado.
+ * Libera a exclusividade de atendimento de um chamado (Pessimistic Locking).
+ * 
+ * Roda no servidor garantindo RLS. Valida estritamente se o usuário logado é o mesmo que detém
+ * o lock atualmente. Se positivo, remove o lock (`locked_by` e `locked_at` como nulos) e adiciona
+ * uma nota de auditoria de que o atendimento foi pausado/encerrado.
+ * 
+ * @param {string} id - O UUID do chamado a ser destravado.
  */
 export async function unlockTicket(id: string) {
   const supabase = await createClient()
