@@ -32,6 +32,17 @@ interface AuditClientProps {
   }
 }
 
+/**
+ * Componente Client-side complexo para a visualização de Auditorias.
+ * 
+ * **Filtros em Cascata e Shallow Routing:** Gerencia os filtros combinados (Prefeitura -> Departamento -> Categoria/Usuário)
+ * utilizando o estado local e sincronizando com a URL (`useSearchParams` e `router.push`). Essa abordagem (shallow routing)
+ * permite que a URL seja a fonte da verdade sem recarregar a página inteira, mantendo a responsividade.
+ * 
+ * **Hydration Mismatch:** As datas são renderizadas com o atributo `suppressHydrationWarning` na célula da tabela. 
+ * Isso evita que discrepâncias de timezone entre o servidor Node.js e o navegador do cliente quebrem 
+ * a hidratação inicial do React.
+ */
 export default function AuditClient({
   initialData,
   total,

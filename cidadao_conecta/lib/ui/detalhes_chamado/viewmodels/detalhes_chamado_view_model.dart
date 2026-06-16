@@ -22,6 +22,11 @@ final updateLocationProvider =
   UpdateLocationNotifier.new,
 );
 
+/// Notifier responsável por gerenciar o estado assíncrono da atualização de localização.
+///
+/// **Clean Architecture:** Atua como a única ponte permitida entre a UI (que deve ser 'burra') e
+/// o `OccurrenceRepository`. Ao utilizar `AsyncValue` (loading, data, error), ele garante que
+/// os Widgets apenas reajam às mudanças de estado, sem conter lógica de negócio ou chamadas diretas ao banco.
 class UpdateLocationNotifier extends AsyncNotifier<void> {
   @override
   Future<void> build() async {}
@@ -45,6 +50,11 @@ final rateOccurrenceProvider =
   RateOccurrenceNotifier.new,
 );
 
+/// Notifier responsável pelo fluxo de avaliação (rating) de um chamado.
+///
+/// Encapsula a mutação assíncrona (AsyncValue) garantindo que a UI mostre os estados de loading
+/// ou erro corretamente. Isolando a camada de apresentação, os repositórios permanecem agnósticos 
+/// ao framework Flutter, e os Widgets reagem automaticamente às mudanças.
 class RateOccurrenceNotifier extends AsyncNotifier<void> {
   @override
   Future<void> build() async {}

@@ -4,6 +4,13 @@ import 'package:geolocator/geolocator.dart';
 import '../../../domain/entities/draft_solicitacao.dart';
 import '../../../core/di/providers.dart';
 
+/// Notifier central para a criação de um novo chamado (Draft).
+///
+/// **Clean Architecture & Gerenciamento de Estado:** Atua como a ponte exclusiva entre o fluxo 
+/// de criação na UI e a camada de dados (Repository). Manipula os estados de `AsyncLoading` e 
+/// `AsyncError` durante o envio (`submitAndGetProtocol`), assegurando que os Widgets permaneçam 'burros' 
+/// e puramente reativos. Se houver falha, ele restaura inteligentemente o estado anterior (draft) 
+/// permitindo que o cidadão tente novamente sem perder os dados preenchidos.
 class NovoChamadoViewModel extends AsyncNotifier<DraftSolicitacao> {
   @override
   FutureOr<DraftSolicitacao> build() {
