@@ -6,11 +6,22 @@ import '../../domain/entities/occurrence_entity.dart';
 import '../../domain/entities/occurrence_timeline_entity.dart';
 import '../../domain/repositories/occurrence_repository.dart';
 
+/// Implementação concreta do repositório de ocorrências (chamados) utilizando Supabase.
+///
+/// Responsável por gerenciar todo o ciclo de vida de um chamado pelo lado do cidadão,
+/// encapsulando as chamadas diretas ao banco de dados e as invocações de Edge Functions
+/// (como embeddings e análise de sentimento), mantendo a Clean Architecture.
 class OccurrenceRepositoryImpl implements OccurrenceRepository {
   final SupabaseClient _supabase;
 
   OccurrenceRepositoryImpl(this._supabase);
 
+  /// Registra um novo chamado e delega o processamento de IA (embeddings) para o backend.
+  ///
+  /// O processo envolve primeiro o upload sequencial de fotos para o Storage, seguido pela
+  /// persistência do registro principal na tabela `occurrences`. Após a criação, invoca de forma 
+  /// assíncrona (fire-and-forget) a Edge Function `generate-embedding` para habilitar futuras buscas
+  /// semânticas e detecção de duplicidade sem bloquear a resposta ao usuário.
   @override
   Future<String> createOccurrence(DraftSolicitacao draft, String userId, String prefeituraId) async {
     List<String> imageUrls = [];
@@ -89,6 +100,11 @@ class OccurrenceRepositoryImpl implements OccurrenceRepository {
     return [];
   }
 
+  /// Adiciona o apoio de um cidadão a um chamado existente.
+  ///
+  /// Esta operação atua de forma atômica para evitar duplicações (tratando o erro `23505` do PostgreSQL).
+  /// Também é responsável por atualizar o contador de apoios de forma manual e gerar um registro
+  /// público na linha do tempo (`occurrence_timeline`), garantindo a rastreabilidade do engajamento social.
   @override
   Future<void> supportOccurrence(String occurrenceId) async {
     final userId = _supabase.auth.currentUser?.id;
@@ -217,6 +233,13 @@ class OccurrenceRepositoryImpl implements OccurrenceRepository {
     )).toList();
   }
 
+  /// Fornece um fluxo (stream) em tempo real da linha do tempo pública de uma ocorrência.
+  ///
+  /// **Workaround do Realtime:** A filtragem por itens públicos (`is_public == true`) é 
+  /// propositalmente realizada em memória (no lado do cliente via `.where()`) e não diretamente 
+  /// na query do Supabase. Isso ocorre devido a uma limitação conhecida do `wal2json` no backend 
+  /// do Supabase, que pode não lidar corretamente com filtros booleanos acoplados a listeners 
+  /// do Realtime em algumas versões da API.
   @override
   Stream<List<OccurrenceTimelineEntity>> getTimelineStreamForOccurrence(String occurrenceId) {
     return _supabase
@@ -264,6 +287,11 @@ class OccurrenceRepositoryImpl implements OccurrenceRepository {
     }).eq('id', occurrenceId);
   }
 
+  /// Avalia a qualidade do atendimento de um chamado já concluído.
+  ///
+  /// Garante regras de negócio estritas (a nota deve ser de 1 a 5, e a ocorrência deve estar concluída 
+  /// e não avaliada previamente). Assim como na criação, aciona de forma assíncrona a Edge Function 
+  /// `analyze-sentiment` para processar o feedback textualmente sem atrasar a resposta da UI do cidadão.
   @override
   Future<void> rateOccurrence(String occurrenceId, int rating, String? feedbackNotes) async {
     // Busca status e nota atual
