@@ -9,3 +9,6 @@ globs: ["*"]
 - Se estiver no início de uma Sprint, você DEVE criar uma branch `feature/sprint-[numero]-[nome]`.
 - Ao fazer commit, você DEVE usar Conventional Commits em Português (pt-BR). Exemplo: `feat: cria tela de login` ou `fix: ajusta margem do botão`.
 - Os commits devem ser atômicos (faça commit a cada tarefa concluída, não deixe tudo para o final).
+- **ATENÇÃO AO POWERSHELL (Terminal Padrão):** 
+  1. Se for rodar `git add` em arquivos cujos caminhos contenham parênteses (ex: `app/(admin)/page.tsx`), você DEVE envolver o caminho em aspas duplas (ex: `git add "app/(admin)/page.tsx"`) ou usar `git commit -a` para evitar erros de subexpressão no PowerShell (ex: "O termo 'admin' não é reconhecido").
+  2. NUNCA utilize o operador `&&` para encadear comandos, pois não é suportado nativamente na maioria das versões antigas do PowerShell. Utilize `;` no lugar (ex: `git add . ; git commit -m "msg"`).

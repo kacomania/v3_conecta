@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cidadao_conecta/ui/detalhes_chamado/widgets/rating_widget.dart';
 
 void main() {
@@ -7,16 +8,20 @@ void main() {
     int? submittedRating;
     String? submittedFeedback;
 
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: RatingWidget(
-          onSubmit: (rating, feedback) async {
-            submittedRating = rating;
-            submittedFeedback = feedback;
-          },
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: RatingWidget(
+              onSubmit: (rating, feedback) async {
+                submittedRating = rating;
+                submittedFeedback = feedback;
+              },
+            ),
+          ),
         ),
       ),
-    ));
+    );
 
     // Verify 5 stars are rendered
     expect(find.byType(IconButton), findsNWidgets(5));

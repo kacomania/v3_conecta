@@ -1,0 +1,14 @@
+workflows:
+  android-release:
+    name: Android Release Build
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+    working_directory: cidadao_conecta
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Build AppBundle
+        script: flutter build appbundle --release
+    artifacts:
+      - build/app/outputs/bundle/release/app-release.aab
