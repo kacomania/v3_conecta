@@ -126,7 +126,7 @@ export async function getAuditLogs({
   const [occurrenceRes, systemRes, emailsRes] = await Promise.all([
     occurrenceQuery,
     (departmentId || categoryId) ? { data: [], error: null } : systemQuery, // system logs don't have dept/category
-    supabase.from('admin_user_emails').select('*')
+    supabase.rpc('get_admin_user_emails')
   ])
 
   if (occurrenceRes.error) console.error('Error fetching occurrence_timeline:', occurrenceRes.error)

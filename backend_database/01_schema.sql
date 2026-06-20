@@ -62,11 +62,19 @@ CREATE TABLE public.user_departments (
     PRIMARY KEY (user_id, department_id)
 );
 
--- View: admin_user_emails
-CREATE OR REPLACE VIEW public.admin_user_emails AS
-SELECT id, email 
-FROM auth.users 
-WHERE public.get_current_user_access_level() >= 3;
+-- Function: get_admin_user_emails (Replaces admin_user_emails view to fix auth_users_exposed lint)
+CREATE OR REPLACE FUNCTION public.get_admin_user_emails()
+RETURNS TABLE (id UUID, email VARCHAR) AS $$
+BEGIN
+    IF public.get_current_user_access_level() >= 3 THEN
+        RETURN QUERY SELECT u.id, u.email::VARCHAR FROM auth.users u;
+    ELSE
+        RETURN;
+    END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+REVOKE EXECUTE ON FUNCTION public.get_admin_user_emails() FROM anon;
 
 -- Table: occurrences
 CREATE TABLE public.occurrences (

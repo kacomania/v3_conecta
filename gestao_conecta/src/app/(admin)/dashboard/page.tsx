@@ -84,7 +84,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   
   if (lockedByIds.length > 0) {
     const { data: emails } = await supabase
-      .from('admin_user_emails')
+      .rpc('get_admin_user_emails')
       .select('id, email')
       .in('id', lockedByIds)
       

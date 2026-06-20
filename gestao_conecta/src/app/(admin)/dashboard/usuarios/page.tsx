@@ -17,7 +17,7 @@ export default async function UsuariosPage() {
   const userRoles = rawUserRoles?.filter((ur: any) => ur.roles?.access_level > 0) || []
 
   // Fetch user emails from secure view
-  const { data: userEmails } = await supabase.from('admin_user_emails').select('*')
+  const { data: userEmails } = await supabase.rpc('get_admin_user_emails')
   const emailMap: Record<string, string> = Object.fromEntries(userEmails?.map((u: any) => [u.id, u.email]) || [])
 
   // Fetch user departments

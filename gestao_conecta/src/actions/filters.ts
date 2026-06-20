@@ -90,7 +90,7 @@ export async function getUsersByDepartment(prefeituraId: string, departmentId: s
 
   // Fetch emails/names for those user IDs using admin_user_emails view
   const { data: emailsData, error: emailsError } = await supabase
-    .from('admin_user_emails')
+    .rpc('get_admin_user_emails')
     .select('id, email')
     .in('id', userIds)
 
